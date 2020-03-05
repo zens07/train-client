@@ -13,6 +13,53 @@
   }
 }
 
+.colorDefault {
+  background: rgb(42, 211, 251);
+  background: linear-gradient(
+    32deg,
+    rgba(42, 211, 251, 1) 30%,
+    rgba(0, 129, 255, 1) 61%
+  );
+}
+.formInHome {
+  position: absolute;
+  width: 80%;
+  min-height: 236px;
+  max-height: fit-content;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* left: 139px; */
+  top: 450px;
+  background: #ffffff;
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.25);
+  border-radius: 5px;
+}
+.imageHome1 {
+  position: absolute;
+  object-fit: cover;
+  width: 500px;
+  height: 199px;
+  top: 20px;
+
+  background-image: url("./image-bg/dummy1.png");
+  border: 5px solid #ffffff;
+  box-sizing: border-box;
+  box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+}
+
+.imageHome2 {
+  position: absolute;
+  object-fit: cover;
+  width: 500px;
+  height: 199px;
+  right: 60px;
+  background-image: url("./image-bg/dummy2.png");
+  box-sizing: border-box;
+  box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
