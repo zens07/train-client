@@ -13,6 +13,31 @@
   }
 }
 
+.imageCover {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+}
+
+.uploadCover {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  cursor: pointer;
+}
+.inputImage {
+  display: none;
+  /* cursor: pointer; */
+}
+
+.cardHeader {
+  border-bottom-right-radius: 55pt 30pt;
+}
+.imageAttecment {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+}
 .colorDefault {
   background: rgb(42, 211, 251);
   background: linear-gradient(
@@ -29,7 +54,21 @@
   left: 50%;
   transform: translate(-50%, -50%);
   /* left: 139px; */
-  top: 450px;
+  top: 150px;
+  background: #ffffff;
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.25);
+  border-radius: 5px;
+}
+
+.cardTicketOrder {
+  /* position: absolute; */
+  width: 80%;
+  min-height: 236px;
+  max-height: fit-content;
+  /* left: 50%; */
+  /* transform: translate(-50%, -50%); */
+  /* left: 139px; */
+  /* top: 150px; */
   background: #ffffff;
   box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.25);
   border-radius: 5px;
@@ -69,6 +108,10 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+}
+
+.pointer {
+  cursor: pointer;
 }
 
 .App-link {

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Modal, Button, Form, Col } from "react-bootstrap";
 import { Redirect } from "react-router-dom";
 import Axios from "axios";
-import { BASE_URL, TOKEN } from "../../config/index";
+import { BASE_URL, TOKEN, BASE_URL_CLIENT } from "../../config/index";
 
 class ModalLogin extends Component {
   constructor(props) {
@@ -10,12 +10,14 @@ class ModalLogin extends Component {
     this.state = {
       email: "",
       password: "",
-      response: {},
-      redirect: false,
-      message: ""
+      linkredirect: {},
+      message: "",
+      status: null
     };
   }
-
+  // componentDidMount() {
+  //   this.checkedStatus();
+  // }
   changeHandler = e => {
     this.setState({ [e.target.name]: e.target.value });
   };
@@ -34,9 +36,8 @@ class ModalLogin extends Component {
     try {
       console.log(dataLogin);
       const res = await Axios.post(`${BASE_URL}/auth/login`, dataLogin);
-      const users = { data: res.data.data };
-      console.log(users.data);
-      this.checkedToken(users);
+      const user = { data: res.data.data };
+      this.checkedStatus(user);
     } catch (error) {
       console.log(error);
       this.setState({
@@ -45,16 +46,25 @@ class ModalLogin extends Component {
     }
   };
 
-  checkedToken = users => {
-    if (users.data) {
-      if (!TOKEN) {
-        localStorage.setItem("token", users.data.token);
-        this.setState({ redirect: true });
-      } else {
-        localStorage.removeItem("token");
-        localStorage.setItem("token", users.data.token);
-        this.setState({ redirect: true });
-      }
+  checkedStatus = user => {
+    if (user.data) {
+      this.setState(
+        {
+          status: user.data.status
+        },
+        () => {
+          localStorage.removeItem("token");
+          localStorage.setItem("token", user.data.token);
+
+          if (!this.state.status) {
+            window.location.assign(`${BASE_URL_CLIENT}/user/home`);
+          } else if (this.state.status) {
+            window.location.assign(`${BASE_URL_CLIENT}/admin/home`);
+          } else {
+            console.log("not status");
+          }
+        }
+      );
     } else {
       this.setState({
         message: "You not have this account"
@@ -63,13 +73,14 @@ class ModalLogin extends Component {
   };
 
   render() {
-    // console.log(this.state.redirect);
-    const { email, password, redirect } = this.state;
+    const { email, password, status } = this.state;
+    console.log("ini status", this.state.status);
     return (
       <>
+        {/* {status == true && TOKEN ? <Redirect to="/admin/home" /> : null}
+        {status == false && TOKEN ? <Redirect to="/user/home" /> : null} */}
         <Modal show={this.props.visibleLogin} size="sm">
           <Modal.Header closeButton onClick={this.props.hideLogin}>
-            {redirect ? <Redirect to="/user/home" /> : <Redirect to="/" />}
             <Modal.Title>Login</Modal.Title>
             {this.state.message ? (
               <div className="alert alert-danger">{this.state.message}</div>

@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "../node_modules/font-awesome/css/font-awesome.min.css";
 import store from "./_redux/store";
 import { Provider } from "react-redux";
 import * as serviceWorker from "./serviceWorker";

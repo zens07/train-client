@@ -4,10 +4,8 @@ import { Redirect } from "react-router-dom";
 import Axios from "axios";
 import { BASE_URL, TOKEN } from "../../config/index";
 import { animateScroll as scroll } from "react-scroll";
+
 class ModalRegister extends Component {
-  componentDidMount() {
-    // this.props.getSpecies();
-  }
   constructor(props) {
     super(props);
     this.state = {
@@ -18,7 +16,8 @@ class ModalRegister extends Component {
       gender: "",
       phone: "",
       address: "",
-      message: ""
+      message: "",
+      redirect: false
     };
   }
 
@@ -54,7 +53,7 @@ class ModalRegister extends Component {
     try {
       const payload = await Axios.post(`${BASE_URL}/register`, dataRegister);
       const user = { data: payload.data };
-      console.log(user);
+      this.checkedToken(user);
     } catch (error) {
       const { message } = error.response.data;
       this.setState({
@@ -62,7 +61,22 @@ class ModalRegister extends Component {
       });
     }
   };
-
+  checkedToken = user => {
+    if (user.data) {
+      if (!TOKEN) {
+        localStorage.setItem("token", user.data.token);
+        this.setState({ redirect: true });
+      } else {
+        localStorage.removeItem("token");
+        localStorage.setItem("token", user.data.token);
+        this.setState({ redirect: true });
+      }
+    } else {
+      this.setState({
+        message: "You not have this account"
+      });
+    }
+  };
   scrollToTop = () => {
     scroll.scrollToTop();
   };
@@ -75,7 +89,8 @@ class ModalRegister extends Component {
       name,
       gender,
       phone,
-      address
+      address,
+      redirect
     } = this.state;
     return (
       <Modal
@@ -90,6 +105,7 @@ class ModalRegister extends Component {
           onClick={this.props.hideRegister}
           className="colorDefault"
         >
+          {redirect ? <Redirect to="/user/home" /> : <Redirect to="/" />}
           <Modal.Title>Register</Modal.Title>
         </Modal.Header>
         <Modal.Body
@@ -98,7 +114,7 @@ class ModalRegister extends Component {
             overflowY: "auto"
           }}
         >
-          {this.state.message
+          {this.state.message.length > 0
             ? (this.scrollToTop,
               (
                 <div className="alert alert-danger" role="alert">
@@ -107,7 +123,6 @@ class ModalRegister extends Component {
               ))
             : null}
 
-          {/* <h6 onChange={() => this.handleAfterPost(register)}>{message}</h6> */}
           <Form onSubmit={this.submitHandler}>
             <Col lg={12} md={12} sm={12} xs={12}>
               <Form.Group controlId="nameUser">

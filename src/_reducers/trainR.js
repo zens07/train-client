@@ -1,6 +1,8 @@
 const initialState = {
-  findTrain: [],
+  findStation: [],
+  statusData: false,
   isLoading: false,
+  dataErr: [],
   error: false
 };
 
@@ -11,20 +13,24 @@ const trains = (state = initialState, action) => {
       return {
         ...state,
         isLoading: true,
-        error: false
+        error: false,
+        statusData: false
       };
     case "GET_STATION_FULFILLED":
-      // console.log("heyeyyeyy");
+      // console.log("heyeyyeyy", action.payload.data);
       return {
         ...state,
         isLoading: false,
-        findTrain: action.payload.data
+        statusData: true,
+        findStation: action.payload.data.data
       };
     case "GET_STATION_REJECTED":
       return {
         ...state,
         isLoading: false,
-        error: true
+        statusData: false,
+        error: true,
+        dataErr: action.payload.response
       };
     default:
       return state;
