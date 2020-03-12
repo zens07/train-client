@@ -43,6 +43,8 @@ class Home extends Component {
     };
   }
 
+  findDateNow = () => {};
+
   openLogin = () => {
     this.setState({
       modalLogin: !this.state.modalLogin

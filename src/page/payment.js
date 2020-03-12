@@ -8,7 +8,8 @@ import {
   Card,
   Image,
   Table,
-  Button
+  Button,
+  Modal
 } from "react-bootstrap";
 import "../App.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -31,7 +32,9 @@ class Payment extends Component {
       status: null,
       file: null,
       imagePreviewUrl: null,
-      errMessage: ""
+      message: "",
+      errMsg: "",
+      sec: 3
     };
     // this.handleSubmit = this.handleSubmit.bind(this);
     // this.handleChangeImage = this.handleChangeImage.bind(this);
@@ -104,7 +107,23 @@ class Payment extends Component {
               attacment: file
             }
           }).then(response => {
-            alert("success data");
+            // alert("success data");
+            this.setState(
+              {
+                message: response.message,
+                confirm: !this.state.confirm
+              },
+              () => {
+                const myTimer = setInterval(
+                  () => this.setState({ sec: this.state.sec - 1 }),
+                  1000
+                );
+                setTimeout(() => {
+                  clearInterval(myTimer);
+                  this.props.history.push("/user/home");
+                }, 3000);
+              }
+            );
           });
           // alert("image upload success", response);
         })
@@ -145,10 +164,10 @@ class Payment extends Component {
     // if (this.state.status == false) {
     //   console.log("ini error", order.error.message);
     // }
-    console.log(order.data.attacment);
-    console.log("ini gambar", this.state.imagePreviewUrl);
-    console.log("ini attacment", order.data.attacment);
-    console.log("ini order Id", this.props.location.state.orderId);
+    // console.log(order.data.attacment);
+    // console.log("ini gambar", this.state.imagePreviewUrl);
+    // console.log("ini attacment", order.data.attacment);
+    // console.log("ini order Id", this.props.location.state.orderId);
     return Object.keys(order.data).length > 0 || this.state.status == false ? (
       <>
         <Container>
@@ -452,6 +471,14 @@ class Payment extends Component {
               </Row>
             </>
           ) : null}
+          <Modal show={this.state.confirm} centered>
+            <Modal.Body>
+              <h6>
+                Menunggu Konfirmasi pembayaran, redirect dalam {this.state.sec}{" "}
+                detik
+              </h6>
+            </Modal.Body>
+          </Modal>
           <Row className="mt-4 pt-4 mx-0">
             <Col className="colorDefault" style={{ height: "50px" }}></Col>
           </Row>

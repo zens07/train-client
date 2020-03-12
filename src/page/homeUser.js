@@ -38,13 +38,37 @@ class HomeUser extends Component {
       qty: 0,
       redirectOrder: false,
       dateStart: "",
+      dateNow: "",
       redirectHomePublic: false,
       redirectTicket: false
     };
   }
   componentDidMount() {
-    this.props.getUser();
+    this.props.getUser().then(() => this.findDateNow());
   }
+
+  findDateNow = () => {
+    const today = new Date();
+    const date =
+      today.getFullYear() +
+      "-" +
+      (today.getMonth() + 1) +
+      "-" +
+      today.getDate();
+    console.log("date now", date);
+    this.setState({ dateNow: date }, () => {
+      // e.preventDefault();
+      const { station, detinationStation, dateNow } = this.state;
+      const data = {
+        station,
+        detinationStation,
+        dateNow
+      };
+      console.log("post data2", data);
+      this.props.getStation(data);
+    });
+  };
+
   handleChange = e => {
     this.setState({ [e.target.name]: e.target.value });
   };
