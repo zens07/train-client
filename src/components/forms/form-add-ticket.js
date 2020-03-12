@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Button, Form, Col } from "react-bootstrap";
 // import { Redirect, withRouter } from "react-router-dom";
 import axios from "axios";
-import { BASE_URL, TOKEN } from "../../config/index";
+import { BASE_URL, TOKEN, BASE_URL_CLIENT } from "../../config/index";
 import { connect } from "react-redux";
 
 import { getOrders } from "../../_actions/adminA";
@@ -69,10 +69,18 @@ class FormAddTicket extends Component {
       });
       if (Object.keys(payload).length) {
         console.log("success");
+        this.setState(
+          {
+            message: "success creating"
+          },
+          () => {
+            window.location.assign(`${BASE_URL_CLIENT}/admin/home`);
+          }
+        );
+      } else {
         this.setState({
-          message: "success editing"
+          message: "Not Creating Data"
         });
-        // this.props.actionIndex().then(() => this.props.addTicket());
       }
     } catch (error) {
       console.log(error);
@@ -93,7 +101,7 @@ class FormAddTicket extends Component {
     } = this.state;
     console.log("render");
     return (
-      <Col className="p-5">
+      <Col className="pl-5 pt-0">
         {this.state.message != "" ? (
           <div class="alert alert-success" role="alert">
             {this.state.message}

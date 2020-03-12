@@ -11,13 +11,14 @@ import {
 } from "react-bootstrap";
 import "../App.css";
 // import modalLogin from
-import { TOKEN } from "../config/index";
+import { TOKEN, BASE_URL_CLIENT } from "../config/index";
 import { Redirect } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExchangeAlt } from "@fortawesome/free-solid-svg-icons";
 import { connect } from "react-redux";
-
+import NavigationAdmin from "../components/navigations/navigationAdmin";
 import { getOrders } from "../_actions/adminA";
+import { getUser } from "../_actions/userA";
 import FormAddTicket from "../components/forms/form-add-ticket";
 import ListTransaction from "../components/tables/listTransaction";
 class HomeAdmin extends Component {
@@ -32,6 +33,7 @@ class HomeAdmin extends Component {
   }
   componentDidMount() {
     this.props.getOrders();
+    this.props.getUser();
   }
   handleChange = e => {
     this.setState({ [e.target.name]: e.target.value });
@@ -43,12 +45,30 @@ class HomeAdmin extends Component {
     });
   };
 
-  logout = () => {
-    const removeToken = localStorage.removeItem("token");
-    if (removeToken) {
+  // logout = () => {
+  //   const removeToken = localStorage.removeItem("token");
+  //   if (removeToken) {
+  //     this.setState({
+  //       redirect: true
+  //     });
+  //   }
+  // };
+
+  redirect = (home, ticket) => {
+    if (home && !ticket) {
+      const removeToken = localStorage.removeItem("token");
+      window.location.assign(`${BASE_URL_CLIENT}`);
+      // if (removeToken) {
+      //   this.setState({
+      //     redirectHomePublic: true
+      //   });
+      // }
+    } else if (!home && ticket) {
+      // window.location.assign(`${BASE_URL_CLIENT}/user/order`);
       this.setState({
-        redirect: true
+        showAdd: true
       });
+      console.log("error");
     }
   };
 
@@ -59,12 +79,18 @@ class HomeAdmin extends Component {
       dataErr: this.props.data.errorIndex
     };
     console.log("inhome admim", listTransaction);
-    return (
+    return this.props.userShow != [] ? (
       <>
         {!TOKEN ? <Redirect to="/" /> : null}
         <Container fluid className="p-0">
           <Row>
-            <Col className="pr-0">
+            <Col>
+              <NavigationAdmin
+                redirect={this.redirect}
+                userShow={this.props.userShow ? this.props.userShow.name : null}
+              />
+            </Col>
+            {/* <Col className="pr-0">
               <Navbar bg="dark" variant="dark" className="fixed-top">
                 <Navbar.Brand href="#home">LandTick</Navbar.Brand>
                 <Image
@@ -95,11 +121,11 @@ class HomeAdmin extends Component {
                   </NavDropdown>
                 </Nav>
               </Navbar>
-            </Col>
+            </Col> */}
           </Row>
           <Row
             className="align-items-start"
-            style={{ marginTop: "200px", width: "90%" }}
+            style={{ marginTop: "150px", width: "90%" }}
           >
             {listTransaction.isLoading ? (
               <Col className="text-center">
@@ -133,19 +159,21 @@ class HomeAdmin extends Component {
           </Row>
         </Container>
       </>
-    );
+    ) : null;
   }
 }
 
 const mapStateToProps = state => {
   return {
-    data: state.admins
+    data: state.admins,
+    userShow: state.users.userShow.data
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    getOrders: () => dispatch(getOrders())
+    getOrders: () => dispatch(getOrders()),
+    getUser: () => dispatch(getUser())
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(HomeAdmin);

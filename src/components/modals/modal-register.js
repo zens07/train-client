@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Modal, Button, Form, Col } from "react-bootstrap";
 import { Redirect } from "react-router-dom";
 import Axios from "axios";
-import { BASE_URL, TOKEN } from "../../config/index";
+import { BASE_URL, TOKEN, BASE_URL_CLIENT } from "../../config/index";
 import { animateScroll as scroll } from "react-scroll";
 
 class ModalRegister extends Component {
@@ -55,25 +55,28 @@ class ModalRegister extends Component {
       const user = { data: payload.data };
       this.checkedToken(user);
     } catch (error) {
-      const { message } = error.response.data;
+      const { message } = error.response;
       this.setState({
         message
       });
     }
   };
   checkedToken = user => {
+    console.log(user.data);
     if (user.data) {
       if (!TOKEN) {
         localStorage.setItem("token", user.data.token);
+        // window.location.assign(`${BASE_URL_CLIENT}/user/home`);
         this.setState({ redirect: true });
       } else {
         localStorage.removeItem("token");
         localStorage.setItem("token", user.data.token);
+        // window.location.assign(`${BASE_URL_CLIENT}/user/home`);
         this.setState({ redirect: true });
       }
     } else {
       this.setState({
-        message: "You not have this account"
+        message: "Gagal Registrasi"
       });
     }
   };
